@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGroupRequest;
-use App\Http\Requests\CreateUserRequest;
 use App\Repositories\GroupRepository;
 use Illuminate\Http\JsonResponse;
 use App\Traits\ApiResponser;
