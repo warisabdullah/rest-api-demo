@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->longText('description');
             $table->string('email')->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

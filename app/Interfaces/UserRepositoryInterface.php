@@ -11,9 +11,9 @@ interface UserRepositoryInterface
 
     public function delete(int $id);
 
-    public function withPaginate(int $perPage);
+    public function withPaginate(int $perPage, $filters);
 
-    public function assignUserToGroup($userId, $groupId);
+    public function assignUserToGroup($userId, $groupIds);
 
-    public function UnAssignUserToGroup($userId, $groupId);
+    public function UnAssignUserToGroup($userId, $groupIds);
 }

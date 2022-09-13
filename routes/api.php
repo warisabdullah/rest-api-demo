@@ -19,9 +19,8 @@ use App\Http\Controllers\Api\GroupController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-//Route::resource('users',UserController::class);
 Route::group(['prefix' => 'users'], function () {
-    Route::get('/', [UserController::class, 'index']);
+    Route::post('/', [UserController::class, 'index']);
     Route::post('/store', [UserController::class, 'store']);
     Route::post('delete', [UserController::class, 'destroy']);
     Route::post('assign-group', [UserController::class, 'assignGroup']);

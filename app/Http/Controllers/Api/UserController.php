@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AssignUserToGroup;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UserListFilterRequest;
 use App\Repositories\UserRepository;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
@@ -29,9 +30,9 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function index(): JsonResponse
+    public function index(UserListFilterRequest $request): JsonResponse
     {
-        $users = $this->userRepository->withPaginate(5);
+        $users = $this->userRepository->withPaginate(5, $request);
         return $this->success($users, "Available Users");
     }
 
@@ -42,7 +43,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        dd(1);
+//
     }
 
     /**
@@ -103,31 +104,31 @@ class UserController extends Controller
         if ($user == 1) {
             return $this->success(null, 'User deleted successfully');
         } else {
-            return $this->error('User not found');
+            return $this->error('User not found', 404);
         }
     }
 
     public function assignGroup(AssignUserToGroup $request)
     {
         $userId = $request->user_id;
-        $groupId = $request->group_id;
-        $ifAssigned = $this->userRepository->assignUserToGroup($userId, $groupId);
+        $groupIds = $request->group_id;
+        $ifAssigned = $this->userRepository->assignUserToGroup($userId, $groupIds);
         if ($ifAssigned) {
             return $this->success(null, 'Group assigned successfully');
         } else {
-            return $this->error('Group already assigned');
+            return $this->error('Group already assigned',409);
         }
     }
 
     public function UnAssignGroup(AssignUserToGroup $request)
     {
         $userId = $request->user_id;
-        $groupId = $request->group_id;
-        $ifAssigned = $this->userRepository->UnAssignUserToGroup($userId, $groupId);
+        $groupIds = $request->group_id;
+        $ifAssigned = $this->userRepository->UnAssignUserToGroup($userId, $groupIds);
         if ($ifAssigned) {
             return $this->success(null, 'Group Un-assigned successfully');
         } else {
-            return $this->error('Group not assigned');
+            return $this->error('Group not assigned',409);
         }
     }
 }

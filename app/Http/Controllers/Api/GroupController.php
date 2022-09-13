@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateGroupRequest;
+use App\Http\Requests\CreateUserRequest;
 use App\Repositories\GroupRepository;
 use Illuminate\Http\JsonResponse;
 use App\Traits\ApiResponser;
@@ -28,7 +30,7 @@ class GroupController extends Controller
     public function index(): JsonResponse
     {
         $groups = $this->groupRepository->withPaginate(5);
-        return $this->success($groups, "Available Groups");
+        return $this->success($groups, "Group List");
     }
 
     /**
@@ -47,7 +49,7 @@ class GroupController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request): JsonResponse
+    public function store(CreateGroupRequest $request): JsonResponse
     {
         $group = $this->groupRepository->store($request->all());
         return $this->success($group, 'Group created successfully');
@@ -102,7 +104,7 @@ class GroupController extends Controller
         }
         else
         {
-            return $this->error('Group not found');
+            return $this->error('Group not found',404);
         }
     }
 }

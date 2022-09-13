@@ -18,9 +18,9 @@ class UserRepository implements UserRepositoryInterface
     private $unAssignUserToGroupService;
 
     public function __construct(
-        CreateUserService        $createUserService,
-        DeleteUserService        $deleteUserService,
-        AssignUserToGroupService $assignUserToGroupService,
+        CreateUserService            $createUserService,
+        DeleteUserService            $deleteUserService,
+        AssignUserToGroupService     $assignUserToGroupService,
         UnAssignUserFromGroupService $unAssignUserToGroupService
     )
     {
@@ -47,9 +47,38 @@ class UserRepository implements UserRepositoryInterface
         return User::find($userId);
     }
 
-    public function withPaginate($perPage)
+    public function withPaginate($perPage, $filters = null)
     {
-        return User::paginate($perPage);
+        $firstName = $filters->first_name;
+        $groupName = $filters->group_name;
+
+        $sortByFirstName = $filters->sort_by_first_name;
+        $sortByLastName = $filters->sort_by_last_name;
+        $sortByGroupCount = $filters->sort_by_group_count;
+
+
+        $users = User::withCount(['groups'])->with('groups');
+        if ($firstName) {
+            $users->where('first_name', $firstName);
+        }
+        if ($groupName) {
+            $users->whereHas('groups', function ($q) use ($groupName) {
+                if ($groupName) {
+                    $q->where('name', $groupName);
+                }
+            });
+        }
+
+        if ($sortByFirstName) {
+            $users->orderBy('first_name', $sortByFirstName);
+        }
+        if ($sortByLastName) {
+            $users->orderBy('last_name', $sortByLastName);
+        }
+        if ($sortByGroupCount) {
+            $users->orderBy('groups_count', $sortByGroupCount);
+        }
+        return $users->paginate($perPage);
     }
 
     public function store($data)
@@ -63,13 +92,13 @@ class UserRepository implements UserRepositoryInterface
 
     }
 
-    public function assignUserToGroup($userId, $groupId)
+    public function assignUserToGroup($userId, $groupIds)
     {
-        return $this->assignUserToGroupService->assignUserToGroup($userId, $groupId);
+        return $this->assignUserToGroupService->assignUserToGroup($userId, $groupIds);
     }
 
-    public function UnAssignUserToGroup($userId, $groupId)
+    public function UnAssignUserToGroup($userId, $groupIds)
     {
-        return $this->unAssignUserToGroupService->UnAssignUserToGroup($userId, $groupId);
+        return $this->unAssignUserToGroupService->UnAssignUserToGroup($userId, $groupIds);
     }
 }
