@@ -116,7 +116,7 @@ class UserController extends Controller
         if ($ifAssigned) {
             return $this->success(null, 'Group assigned successfully');
         } else {
-            return $this->error('Group already assigned',409);
+            return $this->error('Group already assigned');
         }
     }
 
@@ -128,7 +128,7 @@ class UserController extends Controller
         if ($ifAssigned) {
             return $this->success(null, 'Group Un-assigned successfully');
         } else {
-            return $this->error('Group not assigned',409);
+            return $this->error('Group not assigned');
         }
     }
 }

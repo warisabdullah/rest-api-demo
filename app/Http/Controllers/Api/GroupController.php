@@ -104,7 +104,7 @@ class GroupController extends Controller
         }
         else
         {
-            return $this->error('Group not found',404);
+            return $this->error('Group not found');
         }
     }
 }
